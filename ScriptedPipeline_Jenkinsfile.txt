@@ -1,0 +1,33 @@
+node('master') 
+{
+  stage('ContinuousDownload') 
+  {
+    git branch: 'feature', credentialsId: 'me', url: 'https://github.com/ttnwt/webapp.git'
+  } 
+  stage('ContinuousBuild') 
+  {
+    sh 'mvn package'
+  } 
+  stage('ContinuousDeployment') 
+  {
+    deploy adapters: [tomcat8(credentialsId: 'qa', path: '', url: 'http://172.31.88.197:8080')], contextPath: 'qaenv', war: '**/*.war'
+  }
+  stage('ContinuousTesting') 
+  {
+    git 'https://github.com/selenium-saikrishna/TestingOnLinux.git'
+    sh 'java -jar  /var/lib/jenkins/workspace/Pipeline/testing.jar'
+  }
+  stage('ContinuousDelivery') 
+  {
+      input message: 'Waiting for approval from executor', submitter: 'ttwnt'
+      deploy adapters: [tomcat8(credentialsId: 'prodep', path: '', url: 'http://172.31.95.153:8080')], contextPath: 'catenv', war: '**/*.war'
+  }
+  
+  
+  
+  
+  
+  
+  
+  
+}
