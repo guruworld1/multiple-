@@ -1,4 +1,4 @@
-node('slave.jar') 
+node('master') 
 {
     stage('Continuous Download')
                    {
