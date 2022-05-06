@@ -1,0 +1,21 @@
+node('master')
+
+{
+
+stage('ContinuousDownload') 
+   
+	 {
+	
+   git 'https://github.com/Zubby19/multiple-.git ' 
+    
+	}
+
+stage('Continuousbuild') 
+   
+	 {
+
+   input message: 'Waiting for approval from executor', submitter: 'ttwnt'
+   sh label: '', script: 'mvn package'
+	}
+}
+
